@@ -1,0 +1,3482 @@
+Node.jsv12.13.1
+
+
+
+
+Node.js  is a JavaScript runtime built on Chrome's V8 JavaScript engine
+@INTRODUCTION
+Javascript is one we used in browser.
+Node.js is “other version of Javascript” which allows it to run outside of Browser.
+
+Node.js uses V8 (JS Engine - by Google)
+That Runs Javascript in Browser.
+
+What is this engine ?
+Will take JS Code and compiles it to machine code(so to run it on our system).
+V8 is build using C++(so to leverage functionalities of it)
+
+Node.js takes V8 engine and adds some features to it like “local File System - opening, deleting, reading”. -Not possible in browser(Functionality not given due to security reasons)
+
+JS code with C++ Bindings are passed to V8 enginer in order to tell C++ what should it run! Because most of feature are not provided by JS but by C++.
+Like when we do document.getElementById() or fs.open()
+
+Browsers uses Vanilla V8 (No Modification).
+Whereas Node.js adds features(global, process) and hence "extended version of V8”.
+
+Note: Some feature from V8 are also removed like(document, window) because in server we don’t have any webpage.
+
+Node.js provides Non-Blocking I/O(Input,Output) and hence light weight, efficient: Non blocking means that Node process I/O(interating with db, working with files) will be done in background.
+
+firstFile.js > node firstFile.js (To Run)
+const fs = require("fs");
+
+
+fs.writeFileSync("myfile.txt", "This is the file i talked about”);
+
+This will create myfile.txt (if not exist) and write “This is…”
+
+
+@Role And Usage Of Node.js
+# Node.js is used to :
+Handle our Database
+Input Validation(In Browser everything can be manipulated)
+Handle Business Logic
+Get request by user
+Send Response To User
+User can’t access server directly he has to use some medium to send Request (Browser,Postman)
+
+
+Node.js is Not Limited To SERVER !
+Node.js is Javascript Runtime(not a Framework or Language),  just write code and Run (just like Above Code)
+It is used in Utilities Scripts and Build Tools in React, Vue, Angular but is never exposed to public
+
+# Node.js Role:  
+1.Run Server and listen to Requests
+Apache and Nginx listen to request and then execute PHP Code. Node.js is complete package which do both.
+
+2.Execute Business Logic
+Input Validation, DB handelling, handle Request
+
+3.Send Response To Client
+Rendered HTML, JSON …
+
+
+Node.js Alternatives are Python (Django), PHP(Laravel, Vanilla), ASP.net, Ruby
+
+# REPL
+R ead (Read User Input)
+E val (Evaluate User Input)
+P rint (Print User Input)
+L oop (Loop back to step 1)
+
+To use  REPL  >node !  | We Mostly Execute Files as we can save & order them.
+
+
+@Javascript Refresher
+# Javascript Features :
+Weakly typed: (type of data has not to be mentioned like int,float)
+Object Oriented: (Organize data in logical object)
+Versatile: Can be used both in Browser/Server
+
+
+console.log(true)   // true, NOT 1 
+
+# var , let, const :
+Var (used before / outdated / only global scope)
+let (ES6, block level, declared outside fn- global level) 
+Const (ES6, block level, declared outside fn- global level, CANT BE CHANGED) 
+
+
+Var : Because variable declarations (and declarations in general) are processed before any code is executed, declaring a variable anywhere in the code is equivalent to declaring it at the top. This also means that a variable can appear to be used before it’s declared. This behavior is called “hoisting”, as it appears that the variable declaration is moved to the top of the function or global code.
+Const : To make code Readable and make logic clear use const as max as possible.
+
+
+let arr = [2, 4, 34, 53, 23] //iterate over array - for - of
+for (const v of arr){
+console.log(v)
+}
+
+let arr2= arr.slice() //COPY ARRAY
+let arr2=[…arr] //SPREAD OPERATOR
+
+#REST OPERATOR
+for (…arr){ //take arguments and return array | flexible 
+arr
+}
+
+
+
+# Promise :
+const fetchData = () => {
+const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(‘done!’);  //return done
+    }, 1500);
+  });
+  return promise;
+};
+
+setTimeout(() => {
+  console.log('Timer is done!');
+  fetchData()
+    .then(text => {
+      console.log(text);
+      return fetchData(); //returning promise again
+    })
+    .then(text2 => {
+      console.log(text2);
+    });
+}, 2000);
+
+
+
+
+@TEMPLATE LITERALS
+One other feature, we'll use from time to time are template literals: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+It's a different way of writing strings.
+Instead of using double or single quotation marks:
+'A String'
+or
+"Another string"
+you can use backticks (`)
+`Another way of writing strings`
+Now why would we use that way of creating strings?
+With that syntax, you can dynamically add data into a string like this:
+const name = "Max";
+const age = 29;
+console.log(`My name is ${name} and I am ${age} years old.`);
+This is of course shorter and easier to read than the "old" way of concatenating strings:
+const name = "Max";
+const age = 29;
+console.log("My name is " + name + " and I am " + age + " years old.”);
+
+
+
+@NODE.JS BASIC
+ 
+# HTTP  IS A "CORE MODULE" WHICH SHIPS WITH NODE.JS
+
+const http = require("http");
+
+
+const server = http.createServer((req, res) => { //create Server and insert callback
+console.log(req);
+// process.exit(); //to Exit the Node.js Event Lifecycle
+});
+
+
+server.listen(3000); //listen to the server at port 3000
+
+======================================================================
+
+req.url, req.method, req.headers are important part of req.
+
+
+
+
+
+
+# Sending Response :
+
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+console.log(req.url, req.method, req.headers);
+
+res.setHeader("Content-Type", "text/html");
+res.write("<html>");
+res.write("<head><title>Inclined Scorpio</title></head>");
+res.write("<body> Let's Start Node.js</body>");
+res.write("</html>");
+
+res.end();
+});
+
+server.listen(3000);
+
+
+
+
+
+
+
+# Targetting Url's :
+
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+if (req.url == "/") {
+res.write("<html>");
+res.write("<head><title>IS</title></head>");
+res.write("<body>");
+res.write(
+"<form method='POST' action='/home'><input name='messsage'/><button type='submit'>Send</button></form>"
+);
+res.write("</body></html");
+return res.end();
+}
+
+res.setHeader("Content-Type", "text/html");
+res.write("<html>");
+res.write("<head><title>Inclined Scorpio</title></head>");
+res.write("<body> Let's Start Node.js</body>");
+res.write("</html>");
+
+res.end();
+});
+
+server.listen(3000);
+
+
+
+
+
+
+
+# Redirecting & saving Detail in File :
+
+if (req.url == "/home") {
+res.statusCode = 302; //redirect !
+res.setHeader("location", "/"); //location to redirect
+fs.writeFileSync("names.txt", "bhushan ji");
+return res.end();
+}
+
+
+
+
+# Chunks | Buffer | Parsing Data:
+
+const http = require("http");
+const fs = require("fs");
+
+const server = http.createServer((req, res) => {
+
+. . . . . . . . . . . . . . . .
+
+if (req.url == "/home") {
+let body = [];
+    req.on("data", chunk => { //on is event listener, chunk is chunk of data
+        console.log(" Chunk--> ", chunk);
+        body.push(chunk); //keep chunks in array
+    });
+    req.on("end", () => {
+        let parsedData = Buffer.concat(body).toString(); //concat chunk in Buffer(Global) & convert Ascii To string
+        fs.appendFileSync("names.txt", `${parsedData.split("=")[1]} \n`); //writeFileSync(to write) & appendWriteSync(Append)
+    });
+
+    res.statusCode = 302; //redirect !
+    res.setHeader("location", "/"); //location to redirect
+    return res.end();//THIS WILL BE EXECUTED AND REQUEST WILL BE SENT | “end” will run After that!
+}
+. . . . . . . . . . . . . . . .
+
+});
+server.listen(3000);
+
+
+
+
+
+# req.on() will Run after Request is Sent | If you don’t want keep it inside “end”.
+
+On Looking Callbacks ()=>{} , Node keeps an event table where it notes so to run them in future.
+With Events(createServer, on ) it keeps the listener ()=> {} , it will run listener as soon as event comes.
+
+
+
+
+# USE appendFile() & writeFile() to do them Async (better)
+
+fs.appendFile("names.txt", `${parsedData.split("=")[1]} \n`, err => {
+if(err) <-Do Something{}
+res.statusCode = 302; //redirect !
+res.setHeader("location", "/"); //location to redirect
+return res.end();
+});
+
+appendFile & writeFile receives a callback with error inside.
+
+
+
+
+# EVENT DRIVEN ARCHITECTURE:
+
+
+Javascript is Single Threaded So Node.js is Single Threaded.
+
+
+
+
+Everytime a Event is triggered, a Event Loop is called.
+Event Callbacks are associated with them.
+
+If Any heavy work is to be done, Worker Pool is used.
+Worker Pool are Workers in Kernel. It has Multiple Threads.(MultiThreading)
+Hence, HEAVY LIFTING are done by them rather than Node. (It’s a C program)
+
+Now, once work is done, C program calls JS to run Callback.
+# THE EVENT LOOP:
+https://nodejs.org/uk/docs/guides/event-loop-timers-and-nexttick/#why-would-that-be-allowed
+
+1.Check Timers if Any
+Node will check for setTimeout & setIntervals And note the time duration.
+
+2.Pending Callbacks
+If any callback which was left in last cycle. Callbacks are Kept in a Queue in FIFO Fashion.
+
+3.POLL PHASE
+In Poll Phase, Node.js will check for New I/O(Input/Output like-File Write, Connection) Events and keep them in a QUEUE.
+Now, it will start executing them immediately one by one. If TIME Exceed (decided by C Program -libuv) then Next Phase.
+
+libuv: The C library that implements the Node.js event loop, its worker threads and all of the asynchronous behaviors of the platform. It also serves as a cross-platform abstraction library, giving easy, POSIX-like access across all major operating systems to many common system tasks, such as interacting with the filesystem, sockets, timers, and system events
+
+From here, it will wait for I/O - Also, if Timout(Step 1) is up, Goes Back To Check Timer and executes it’s Callback…
+If, setImmediately( ) found, move to Check Phase Immediately.
+If nothing is found to execute, it will wait till Timeout or it’s Timer is Over.
+Once the poll queue is empty the event loop will check for timers whose time thresholds have been reached. If one or more  timers are ready, the event loop will wrap back to the timers phase to execute those timers' callbacks.
+
+
+4.CHECK PHASE
+In Check Phase setImmediate() functions are executed completely. It Allows User to execute Callback Immediately in Poll Phase.
+As Soon as Poll Phase encounters setImmediate, It will shift to this Phase Immediately to Execute it.
+
+
+5.CLOSE PHASE
+This phase is used to Close Connections like closing sockets, close event Callbacks.
+
+process.exit() can be used anywhere, it will execute every single Callback in Queue in Step 2 and then EXIT.
+  
+process.nextTick() will accept Callbacks and it will let all rest Variable/functions be completed and then at last run the callback
+After which Next Event Loop will Start.
+
+After Every loop 
+# FN LOOKS ASYNC BUT IS SYNC
+let bar;
+
+// this has an asynchronous signature, but calls callback synchronously
+function someAsyncApiCall(callback) { callback(); }
+
+// the callback is called before `someAsyncApiCall` completes.
+someAsyncApiCall(() => {
+  // since someAsyncApiCall hasn't completed, bar hasn't been assigned any value
+  console.log('bar', bar); // undefined
+});
+
+bar = 1;
+The user defines someAsyncApiCall() to have an asynchronous signature, but it actually operates synchronously. When it is called, the callback provided to someAsyncApiCall() is called in the same phase of the event loop because someAsyncApiCall() doesn't actually do anything asynchronously. As a result, the callback tries to reference bar even though it may not have that variable in scope yet, because the script has not been able to run to completion.
+By placing the callback in a process.nextTick(), the script still has the ability to run to completion, allowing all the variables, functions, etc., to be initialized prior to the callback being called. It also has the advantage of not allowing the event loop to continue. It may be useful for the user to be alerted to an error before the event loop is allowed to continue. Here is the previous example using process.nextTick():
+# USAGE OF NEXTTICK
+let bar;
+
+function someAsyncApiCall(callback) {
+  process.nextTick(callback);
+}
+
+someAsyncApiCall(() => {
+  console.log('bar', bar); // 1
+});
+
+bar = 1;
+
+
+
+# ANYONE CAN BE CALLED IF IN MAIN FILE
+// timeout_vs_immediate.js
+setTimeout(() => {
+  console.log('timeout');
+}, 0);
+
+setImmediate(() => {
+  console.log('immediate');
+});
+$ node timeout_vs_immediate.js
+timeout
+immediate
+
+$ node timeout_vs_immediate.js
+immediate
+timeout
+
+
+
+
+However, if you move the two calls within an I/O cycle, the immediate callback is always executed first:
+// timeout_vs_immediate.js
+const fs = require('fs’);
+
+fs.readFile(__filename, () => { //EVENT LOOP
+  setTimeout(() => {
+    console.log('timeout');
+  }, 0);
+  setImmediate(() => {
+    console.log('immediate');
+  });
+});
+$ node timeout_vs_immediate.js
+immediate
+timeout
+
+$ node timeout_vs_immediate.js
+immediate
+
+%% SET TIMEOUT CAN TAKE MORE TIME AS SET, BECAUSE IT MAY BE IN OTHER PHASE 
+%% BUT WILL IMMEDITELY COME BACK WHEN TIMER RINGS.
+
+
+#KEEPING routes Login in File - routes.js
+const fs = require("fs");
+
+const Routes = (req, res) => {
+if (req.url == "/") {
+res.write("<html>");
+res.write("<head><title>IS</title></head>");
+res.write("<body>");
+res.write(
+"<form method='POST' action='/home'><input name='messsage'/><button type='submit'>Send</button></form>"
+);
+res.write("</body></html");
+return res.end();
+}
+if (req.url == "/home") {
+let body = [];
+req.on("data", chunk => {
+console.log(" Chunk--> ", chunk);
+body.push(chunk);
+});
+req.on("end", () => {
+// when req has received all chunks
+let parsedData = Buffer.concat(body).toString();
+fs.appendFile("names.txt", `${parsedData.split("=")[1]} \n`, err => {
+if (err) res.send("Some error Occured");
+//Now return from here as "return already will run by when control reaches here"
+});
+});
+res.statusCode = 302; //redirect !
+res.setHeader("location", "/"); //location to redirect
+return res.end();
+}
+
+res.setHeader("Content-Type", "text/html");
+res.write("<html>");
+res.write("<head><title>Inclined Scorpio</title></head>");
+res.write("<body> Let's Start Node.js</body>");
+res.write("</html>");
+
+res.end();
+};
+
+//USE ANY ONE - WAYS OF EXPORTING
+module.exports = Routes;
+=================================================================
+module.exports = { //Use this Method - better
+routes: Routes,
+message: "Hard Coded Text"
+};
+=================================================================
+module.exports.routes = Routes;
+module.exports.message = "Hard Coded Text";
+=================================================================
+exports.routes = Routes; //Directly export.key can be used ! (Functionality of Node.js)
+exports.message = "Hard Coded Text”;
+
+
+
+#NODE PROGRAM EXITS WHEN WORKS IS COMPLETED
+# IN CASE OF createServer(), it never exits by default.
+
+
+
+# When We Use Async Code, Callback, Events(on)--> Order Of Execution Changes.
+
+
+# Data in Node comes in Chunks(Streams&Buffer) --> Parse it !!
+
+
+# require will import module as “”Cache”" ! (You can’t change original Export Stuff)
+
+
+
+
+
+
+@Don't Block the Event Loop (or the Worker Pool)
+Node.js has two types of threads: one Event Loop and k Workers. The Event Loop is responsible for JavaScript callbacks and non-blocking I/O, and a Worker executes tasks corresponding to C++ code that completes an asynchronous request, including blocking I/O and CPU-intensive work. Both types of threads work on no more than one activity at a time. If any callback or task takes a long time, the thread running it becomes blocked. If your application makes blocking callbacks or tasks, this can lead to degraded throughput (clients/second) at best, and complete denial of service at worst.
+To write a high-throughput, more DoS-proof web server, you must ensure that on benign and on malicious input, neither your Event Loop nor your Workers will block.
+
+
+
+
+@Why should I avoid blocking the Event Loop and the Worker Pool?
+Node.js uses a small number of threads to handle many clients. In Node.js there are two types of threads: one Event Loop (aka the main loop, main thread, event thread, etc.), and a pool of k Workers in a Worker Pool (aka the threadpool).
+If a thread is taking a long time to execute a callback (Event Loop) or a task (Worker), we call it "blocked". While a thread is blocked working on behalf of one client, it cannot handle requests from any other clients. This provides two motivations for blocking neither the Event Loop nor the Worker Pool:
+Performance: If you regularly perform heavyweight activity on either type of thread, the throughput (requests/second) of your server will suffer.
+Security: If it is possible that for certain input one of your threads might block, a malicious client could submit this "evil input", make your threads block, and keep them from working on other clients. This would be a Denial of Service attack.
+
+
+• Node.js passes C++ function binding(It passes pointer to the function) to the C++ program (libuv) for threadPool.
+
+
+
+EventLoop doesn’t have Queue in Real, only Thread Pool has
+Abstractly, the Event Loop and the Worker Pool maintain queues for pending events and pending tasks, respectively.
+In truth, the Event Loop does not actually maintain a queue. Instead, it has a collection of file descriptors that it asks the operating system to monitor, using a mechanism like epoll (Linux), kqueue (OSX), event ports (Solaris), or IOCP (Windows). These file descriptors correspond to network sockets, any files it is watching, and so on. When the operating system says that one of these file descriptors is ready, the Event Loop translates it to the appropriate event and invokes the callback(s) associated with that event. You can learn more about this process here.
+In contrast, the Worker Pool uses a real queue whose entries are tasks to be processed. A Worker pops a task from this queue and works on it, and when finished the Worker raises an "At least one task is finished" event for the Event Loop.
+
+@ FILE DESCRIPTOR ( A non -ve number, for handeling file op)
+Linux Considers everything as File Descriptor ! Keyboard(Read-only), Monitor(Write-only).
+Whenever you write somehthing otput is given to File Descriptor Of Monitor(Writes-it)
+0 (FD) - STDIN,
+1 - STDOUT,
+2- STDERR
+
+A PID is a process id (0- 32,000), an integer that uniquely identifies a certain process (program) in the kernel process table. It's used to manage said process (pause, continue, send certain signals to it), view the resources it uses asd so on.
+A file descriptor is a handle(small numbers 0,1 ,2 ,3, 500) used in programs to open, close, read from or write to files. An inode is a data structure used in file systems for storing metainformation regarding the files stored on said file system.
+
+What is inode?
+whenever you create a new file your OS needs to keep a lot of information about the file, in UNIX like OS this information like file owner , file permissions etc, are are stored in a data structure known as inode. So in simple words inode is data structure that holds information about a file.
+
+
+
+File descriptor
+A file descriptor is a number that uniquely identifies an open file in a computer's operating system. It describes a data resource, and how that resource may be accessed.
+When a program asks to open a file — or another data resource, like a network socket — the kernel:
+Grants access.
+Creates an entry in the global file table.
+Provides the software with the location of that entry.
+The descriptor is identified by a unique non-negative integer, such as 0, 12, or 567. At least one file descriptor exists for every open file on the system.
+File descriptors were first used in Unix, and are used by modern operating systems including Linux, macOS, and BSD. In Microsoft Windows, file descriptors are known as file handles.
+Overview
+When a process makes a successful request to open a file, the kernel returns a file descriptor which points to an entry in the kernel's global file table. The file table entry contains information such as the inode of the file, byte offset, and the access restrictions for that data stream (read-only, write-only, etc.).
+
+
+
+
+
+# Hence, As a developer you should not do heavy Task inside Event Loop Like
+1.Large no. of Await’s
+2.Regex Expressions
+3.JSON.stringify | JSON.parse (Use JSONStream) it is async.
+4.fs when used in sync 
+
+These will block the thread and will hinder other client’s request when Thread pool is sitting alone
+Even if any of the thread is blocked it will result in delay in other clients request.
+
+
+@Improved Workflow & Debugging
+# npm init :
+To initialize package.json(configuration purpose and save module versions).
+{
+"name": "node-training",
+"version": "1.0.0",
+"description": "Project for training purpose",
+"main": "app.js",
+"scripts": {
+"test": "echo \"Error: no test specified\" && exit 1",
+"start": "node app.js". -start is reserved keyword and put your code as value
+},
+ Now, npm start will run node app.js (Easy for others to spin server)
+
+"scripts": {
+"test": "echo \"Error: no test specified\" && exit 1",
+"start": "node app.js",
+"start-server": "node app.js". -start-server is unreserved so use by(npm run start-server)
+},
+
+
+
+
+~ Tilde:
+~ freezes major and minor numbers.
+~1.2.3 will match all 1.2.x versions, but it will miss 1.3.0.
+^ Caret:
+^ freezes the major number only.
+^1.2.3 will match any 1.x.x release including 1.3.0, but it will hold off on 2.0.0.
+
+
+
+
+Node.jsv12.13.1
+
+
+
+
+Node.js  is a JavaScript runtime built on Chrome's V8 JavaScript engine
+@INTRODUCTION
+Javascript is one we used in browser.
+Node.js is “other version of Javascript” which allows it to run outside of Browser.
+
+Node.js uses V8 (JS Engine - by Google)
+That Runs Javascript in Browser.
+
+What is this engine ?
+Will take JS Code and compiles it to machine code(so to run it on our system).
+V8 is build using C++(so to leverage functionalities of it)
+
+Node.js takes V8 engine and adds some features to it like “local File System - opening, deleting, reading”. -Not possible in browser(Functionality not given due to security reasons)
+
+JS code with C++ Bindings are passed to V8 enginer in order to tell C++ what should it run! Because most of feature are not provided by JS but by C++.
+Like when we do document.getElementById() or fs.open()
+
+Browsers uses Vanilla V8 (No Modification).
+Whereas Node.js adds features(global, process) and hence "extended version of V8”.
+
+Note: Some feature from V8 are also removed like(document, window) because in server we don’t have any webpage.
+
+Node.js provides Non-Blocking I/O(Input,Output) and hence light weight, efficient: Non blocking means that Node process I/O(interating with db, working with files) will be done in background.
+
+firstFile.js > node firstFile.js (To Run)
+const fs = require("fs");
+
+
+fs.writeFileSync("myfile.txt", "This is the file i talked about”);
+
+This will create myfile.txt (if not exist) and write “This is…”
+
+
+
+@Role And Usage Of Node.js
+# Node.js is used to :
+Handle our Database
+Input Validation(In Browser everything can be manipulated)
+Handle Business Logic
+Get request by user
+Send Response To User
+User can’t access server directly he has to use some medium to send Request (Browser,Postman)
+
+
+Node.js is Not Limited To SERVER !
+Node.js is Javascript Runtime(not a Framework or Language),  just write code and Run (just like Above Code)
+It is used in Utilities Scripts and Build Tools in React, Vue, Angular but is never exposed to public
+
+# Node.js Role:  
+1.Run Server and listen to Requests
+Apache and Nginx listen to request and then execute PHP Code. Node.js is complete package which do both.
+
+2.Execute Business Logic
+Input Validation, DB handelling, handle Request
+
+3.Send Response To Client
+Rendered HTML, JSON …
+
+
+Node.js Alternatives are Python (Django), PHP(Laravel, Vanilla), ASP.net, Ruby
+
+# REPL
+R ead (Read User Input)
+E val (Evaluate User Input)
+P rint (Print User Input)
+L oop (Loop back to step 1)
+
+To use  REPL  >node !  | We Mostly Execute Files as we can save & order them.
+
+
+@Javascript Refresher
+# Javascript Features :
+Weakly typed: (type of data has not to be mentioned like int,float)
+Object Oriented: (Organize data in logical object)
+Versatile: Can be used both in Browser/Server
+
+
+console.log(true)   // true, NOT 1 
+
+# var , let, const :
+Var (used before / outdated / only global scope)
+let (ES6, block level, declared outside fn- global level) 
+Const (ES6, block level, declared outside fn- global level, CANT BE CHANGED) 
+
+
+Var : Because variable declarations (and declarations in general) are processed before any code is executed, declaring a variable anywhere in the code is equivalent to declaring it at the top. This also means that a variable can appear to be used before it’s declared. This behavior is called “hoisting”, as it appears that the variable declaration is moved to the top of the function or global code.
+Const : To make code Readable and make logic clear use const as max as possible.
+
+
+let arr = [2, 4, 34, 53, 23] //iterate over array - for - of
+for (const v of arr){
+console.log(v)
+}
+
+let arr2= arr.slice() //COPY ARRAY
+let arr2=[…arr] //SPREAD OPERATOR
+
+#REST OPERATOR
+for (…arr){ //take arguments and return array | flexible 
+arr
+}
+
+
+
+# Promise :
+const fetchData = () => {
+const promise = new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(‘done!’);  //return done
+    }, 1500);
+  });
+  return promise;
+};
+
+setTimeout(() => {
+  console.log('Timer is done!');
+  fetchData()
+    .then(text => {
+      console.log(text);
+      return fetchData(); //returning promise again
+    })
+    .then(text2 => {
+      console.log(text2);
+    });
+}, 2000);
+
+
+
+
+@TEMPLATE LITERALS
+One other feature, we'll use from time to time are template literals: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+It's a different way of writing strings.
+Instead of using double or single quotation marks:
+'A String'
+or
+"Another string"
+you can use backticks (`)
+`Another way of writing strings`
+Now why would we use that way of creating strings?
+With that syntax, you can dynamically add data into a string like this:
+const name = "Max";
+const age = 29;
+console.log(`My name is ${name} and I am ${age} years old.`);
+This is of course shorter and easier to read than the "old" way of concatenating strings:
+const name = "Max";
+const age = 29;
+console.log("My name is " + name + " and I am " + age + " years old.”);
+
+
+
+
+
+
+@NODE.JS BASIC
+ 
+# HTTP  IS A "CORE MODULE" WHICH SHIPS WITH NODE.JS
+
+const http = require("http");
+
+
+const server = http.createServer((req, res) => { //create Server and insert callback
+console.log(req);
+// process.exit(); //to Exit the Node.js Event Lifecycle
+});
+
+
+server.listen(3000); //listen to the server at port 3000
+
+======================================================================
+
+req.url, req.method, req.headers are important part of req.
+
+
+
+
+
+
+# Sending Response :
+
+const http = require("http");
+
+const server = http.createServer((req, res) => {
+console.log(req.url, req.method, req.headers);
+res.setHeader("Content-Type", "text/html”); //SET HEADER TYPE | SOME ARE BY DEFAULT SET BY SERVER
+
+res.write("<html>"); //write helps to specify the html content we want to send
+res.write("<head><title>Inclined Scorpio</title></head>");
+res.write("<body> Let's Start Node.js</body>");
+res.write("</html>");
+res.end(); //Asking Node to send the response !
+});
+
+server.listen(3000);
+
+
+
+
+
+
+# Targetting Url's :
+
+const http = require("http");
+
+res.setHeader("Content-Type", "text/html");
+res.write("<html>");
+res.write("<head><title>Inclined Scorpio</title></head>");
+res.write("<body> Let's Start Node.js</body>");
+res.write("</html>");
+
+res.end();
+});
+
+server.listen(3000);
+
+
+
+
+# Redirecting & saving Detail in File :
+
+const http = require("http");
+const fs = require("fs");
+
+const server = http.createServer((req, res) => {
+. . . . . . . . . . .
+
+if (req.url == "/home") {
+res.statusCode = 302; //redirect !
+res.setHeader("location", "/"); //location to redirect
+fs.writeFileSync("names.txt", "bhushan ji");
+OR
+res.writeHead(200, { 'Content-Type': 'text/plain', 'Content-Length': 128 });
+
+return res.end();
+}
+. . . . . . . . . . . .
+});
+
+server.listen(3000);
+
+
+# Chunks | Buffer | Parsing Data:
+
+const http = require("http");
+const fs = require("fs");
+
+const server = http.createServer((req, res) => {
+. . . . . . . . . . . . . . . .
+if (req.url == "/home") {
+let body = [];
+req.on("data", chunk => { //on is event listener, chunk is chunk of data
+console.log(" Chunk--> ", chunk);
+body.push(chunk); //keep chunks in array
+});
+req.on("end", () => {
+let parsedData = Buffer.concat(body).toString(); //concat chunk in Buffer(Global) & convert Ascii To string
+fs.appendFileSync("names.txt", `${parsedData.split("=")[1]} \n`); //writeFileSync(to write) & appendWriteSync(Append)
+});
+
+res.statusCode = 302; //THIS
+res.setHeader("location", "/"); //location to redirect
+return res.end(); //THIS WILL BE EXECUTED AND REQUEST WILL BE SENT | “end” will run after that!
+}
+. . . . . . . . . . . . . . . .
+});
+
+server.listen(3000);
+
+# req.on() will Run after Request is Sent | If you don’t want keep it inside “end”.
+
+On Looking Callbacks ()=>{} , Node keeps an event table where it notes so to run them in future.
+With Events(createServer, on ) it keeps the listener ()=> {} , it will run listener as soon as event comes.
+
+
+
+
+# USE appendFile() & writeFile() to do them Async (better)
+
+fs.appendFile("names.txt", `${parsedData.split("=")[1]} \n`, err => {
+if(err) <-Do Something{}
+res.statusCode = 302; //redirect !
+res.setHeader("location", "/"); //location to redirect
+return res.end();
+});
+
+appendFile & writeFile receives a callback with err inside.
+
+
+
+
+@UNDERSTANDING WORKING OF NODE.JS
+# EVENT DRIVEN ARCHITECTURE:
+Javascript is Single Threaded So Node.js is Single Threaded.
+
+
+
+Everytime a Event is triggered, a Event Loop is called.
+Event Callbacks are associated with them.
+
+
+If Any heavy work is to be done, Worker Pool is used.
+Worker Pool are Workers in Kernel. It has Multiple Threads.(MultiThreading)
+Hence, HEAVY LIFTING are done by them rather than Node. (It’s a C program)
+
+
+Now, once work is done, C program calls JS to run Callback.
+
+
+
+
+
+# THE EVENT LOOP:
+https://nodejs.org/uk/docs/guides/event-loop-timers-and-nexttick/#why-would-that-be-allowed
+
+
+1.Check Timers if Any
+Node will check for setTimeout & setIntervals And note the time duration.
+
+2.Pending Callbacks
+If any callback which was left in last cycle. Callbacks are Kept in a Queue in FIFO Fashion.
+
+3.POLL PHASE
+In Poll Phase, Node.js will check for New I/O(Input/Output like-File Write, Connection) Events and keep them in a QUEUE.
+Now, it will start executing them immediately one by one. If TIME Exceed (decided by C Program -libuv) then Next Phase.
+
+libuv: The C library that implements the Node.js event loop, its worker threads and all of the asynchronous behaviors of the platform. It also serves as a cross-platform abstraction library, giving easy, POSIX-like access across all major operating systems to many common system tasks, such as interacting with the filesystem, sockets, timers, and system events
+
+From here, it will wait for I/O - Also, if Timout(Step 1) is up, Goes Back To Check Timer and executes it’s Callback…
+If, setImmediately( ) found, move to Check Phase Immediately.
+If nothing is found to execute, it will wait till Timeout or it’s Timer is Over.
+
+Once the poll queue is empty the event loop will check for timers whose time thresholds have been reached. If one or more  timers are ready, the event loop will wrap back to the timers phase to execute those timers' callbacks.
+
+4.CHECK PHASE
+In Check Phase setImmediate() functions are executed completely. It Allows User to execute Callback Immediately in Poll Phase.
+As Soon as Poll Phase encounters setImmediate, It will shift to this Phase Immediately to Execute it.
+
+
+5.CLOSE PHASE
+This phase is used to Close Connections like closing sockets, close event Callbacks.
+
+process.exit() can be used anywhere, it will execute every single Callback in Queue in Step 2 and then EXIT.
+  
+process.nextTick() will accept Callbacks and it will let all rest Variable/functions be completed and then at last run the callback
+After which Next Event Loop will Start.
+
+After Every loop 
+# FN LOOKS ASYNC BUT IS SYNC
+let bar;
+
+// this has an asynchronous signature, but calls callback synchronously
+function someAsyncApiCall(callback) { callback(); }
+
+// the callback is called before `someAsyncApiCall` completes.
+someAsyncApiCall(() => {
+  // since someAsyncApiCall hasn't completed, bar hasn't been assigned any value
+  console.log('bar', bar); // undefined
+});
+
+bar = 1;
+The user defines someAsyncApiCall() to have an asynchronous signature, but it actually operates synchronously. When it is called, the callback provided to someAsyncApiCall() is called in the same phase of the event loop because someAsyncApiCall() doesn't actually do anything asynchronously. As a result, the callback tries to reference bar even though it may not have that variable in scope yet, because the script has not been able to run to completion.
+By placing the callback in a process.nextTick(), the script still has the ability to run to completion, allowing all the variables, functions, etc., to be initialized prior to the callback being called. It also has the advantage of not allowing the event loop to continue. It may be useful for the user to be alerted to an error before the event loop is allowed to continue. Here is the previous example using process.nextTick():
+# USAGE OF NEXTTICK
+let bar;
+
+function someAsyncApiCall(callback) {
+  process.nextTick(callback);
+}
+
+someAsyncApiCall(() => {
+  console.log('bar', bar); // 1
+});
+
+bar = 1;
+
+
+
+# ANYONE CAN BE CALLED IF IN MAIN FILE
+// timeout_vs_immediate.js
+setTimeout(() => {
+  console.log('timeout');
+}, 0);
+
+setImmediate(() => {
+  console.log('immediate');
+});
+$ node timeout_vs_immediate.js
+timeout
+immediate
+
+$ node timeout_vs_immediate.js
+immediate
+timeout
+
+
+
+
+However, if you move the two calls within an I/O cycle, the immediate callback is always executed first:
+// timeout_vs_immediate.js
+const fs = require('fs’);
+
+fs.readFile(__filename, () => { //EVENT LOOP
+  setTimeout(() => {
+    console.log('timeout');
+  }, 0);
+  setImmediate(() => {
+    console.log('immediate');
+  });
+});
+$ node timeout_vs_immediate.js
+immediate
+timeout
+
+$ node timeout_vs_immediate.js
+immediate
+
+%% SET TIMEOUT CAN TAKE MORE TIME AS SET, BECAUSE IT MAY BE IN OTHER PHASE 
+%% BUT WILL IMMEDITELY COME BACK WHEN TIMER RINGS.
+
+
+
+
+#KEEPING routes Login in File - routes.js
+const fs = require("fs");
+
+const Routes = (req, res) => {
+if (req.url == "/") {
+res.write("<html>");
+res.write("<head><title>IS</title></head>");
+res.write("<body>");
+res.write(
+"<form method='POST' action='/home'><input name='messsage'/><button type='submit'>Send</button></form>"
+);
+res.write("</body></html");
+return res.end();
+}
+if (req.url == "/home") {
+let body = [];
+req.on("data", chunk => {
+console.log(" Chunk--> ", chunk);
+body.push(chunk);
+});
+req.on("end", () => {
+// when req has received all chunks
+let parsedData = Buffer.concat(body).toString();
+fs.appendFile("names.txt", `${parsedData.split("=")[1]} \n`, err => {
+if (err) res.send("Some error Occured");
+//Now return from here as "return already will run by when control reaches here"
+});
+});
+res.statusCode = 302; //redirect !
+res.setHeader("location", "/"); //location to redirect
+return res.end();
+}
+
+res.setHeader("Content-Type", "text/html");
+res.write("<html>");
+res.write("<head><title>Inclined Scorpio</title></head>");
+res.write("<body> Let's Start Node.js</body>");
+res.write("</html>");
+
+res.end();
+};
+
+//USE ANY ONE - WAYS OF EXPORTING
+module.exports = Routes;
+=================================================================
+module.exports = { //Use this Method - better
+routes: Routes,
+message: "Hard Coded Text"
+};
+=================================================================
+module.exports.routes = Routes;
+module.exports.message = "Hard Coded Text";
+=================================================================
+exports.routes = Routes; //Directly export.key can be used ! (Functionality of Node.js)
+exports.message = "Hard Coded Text”;
+
+
+
+#NODE PROGRAM EXITS WHEN WORKS IS COMPLETED
+# IN CASE OF createServer(), it never exits by default.
+
+
+
+# When We Use Async Code, Callback, Events(on)--> Order Of Execution Changes.
+
+
+# Data in Node comes in Chunks(Streams&Buffer) --> Parse it !!
+
+
+# require will import module as “”Cache”" ! (You can’t change original Export Stuff)
+
+
+
+
+
+
+
+
+
+@Don't Block the Event Loop (or the Worker Pool)
+Node.js has two types of threads: one Event Loop and k Workers. The Event Loop is responsible for JavaScript callbacks and non-blocking I/O, and a Worker executes tasks corresponding to C++ code that completes an asynchronous request, including blocking I/O and CPU-intensive work. Both types of threads work on no more than one activity at a time. If any callback or task takes a long time, the thread running it becomes blocked. If your application makes blocking callbacks or tasks, this can lead to degraded throughput (clients/second) at best, and complete denial of service at worst.
+To write a high-throughput, more DoS-proof web server, you must ensure that on benign and on malicious input, neither your Event Loop nor your Workers will block.
+
+
+
+
+@Why should I avoid blocking the Event Loop and the Worker Pool?
+Node.js uses a small number of threads to handle many clients. In Node.js there are two types of threads: one Event Loop (aka the main loop, main thread, event thread, etc.), and a pool of k Workers in a Worker Pool (aka the threadpool).
+If a thread is taking a long time to execute a callback (Event Loop) or a task (Worker), we call it "blocked". While a thread is blocked working on behalf of one client, it cannot handle requests from any other clients. This provides two motivations for blocking neither the Event Loop nor the Worker Pool:
+Performance: If you regularly perform heavyweight activity on either type of thread, the throughput (requests/second) of your server will suffer.
+Security: If it is possible that for certain input one of your threads might block, a malicious client could submit this "evil input", make your threads block, and keep them from working on other clients. This would be a Denial of Service attack.
+
+
+• Node.js passes C++ function binding(It passes pointer to the function) to the C++ program (libuv) for threadPool.
+
+
+
+EventLoop doesn’t have Queue in Real, only Thread Pool has
+Abstractly, the Event Loop and the Worker Pool maintain queues for pending events and pending tasks, respectively.
+In truth, the Event Loop does not actually maintain a queue. Instead, it has a collection of file descriptors that it asks the operating system to monitor, using a mechanism like epoll (Linux), kqueue (OSX), event ports (Solaris), or IOCP (Windows). These file descriptors correspond to network sockets, any files it is watching, and so on. When the operating system says that one of these file descriptors is ready, the Event Loop translates it to the appropriate event and invokes the callback(s) associated with that event. You can learn more about this process here.
+In contrast, the Worker Pool uses a real queue whose entries are tasks to be processed. A Worker pops a task from this queue and works on it, and when finished the Worker raises an "At least one task is finished" event for the Event Loop.
+
+@ FILE DESCRIPTOR ( A non -ve number, for handeling file op)
+Linux Considers everything as File Descriptor ! Keyboard(Read-only), Monitor(Write-only).
+Whenever you write somehthing otput is given to File Descriptor Of Monitor(Writes-it)
+0 (FD) - STDIN,
+1 - STDOUT,
+2- STDERR
+
+A PID is a process id (0- 32,000), an integer that uniquely identifies a certain process (program) in the kernel process table. It's used to manage said process (pause, continue, send certain signals to it), view the resources it uses asd so on.
+A file descriptor is a handle(small numbers 0,1 ,2 ,3, 500) used in programs to open, close, read from or write to files. An inode is a data structure used in file systems for storing metainformation regarding the files stored on said file system.
+
+What is inode?
+whenever you create a new file your OS needs to keep a lot of information about the file, in UNIX like OS this information like file owner , file permissions etc, are are stored in a data structure known as inode. So in simple words inode is data structure that holds information about a file.
+
+
+
+File descriptor
+A file descriptor is a number that uniquely identifies an open file in a computer's operating system. It describes a data resource, and how that resource may be accessed.
+When a program asks to open a file — or another data resource, like a network socket — the kernel:
+Grants access.
+Creates an entry in the global file table.
+Provides the software with the location of that entry.
+The descriptor is identified by a unique non-negative integer, such as 0, 12, or 567. At least one file descriptor exists for every open file on the system.
+File descriptors were first used in Unix, and are used by modern operating systems including Linux, macOS, and BSD. In Microsoft Windows, file descriptors are known as file handles.
+Overview
+When a process makes a successful request to open a file, the kernel returns a file descriptor which points to an entry in the kernel's global file table. The file table entry contains information such as the inode of the file, byte offset, and the access restrictions for that data stream (read-only, write-only, etc.).
+
+
+
+
+
+
+# Hence, As a developer you should not do heavy Task inside Event Loop Like
+1.Large no. of Await’s
+2.Regex Expressions
+3.JSON.stringify | JSON.parse (Use JSONStream) it is async.
+4.fs when used in sync 
+
+These will block the thread and will hinder other client’s request when Thread pool is sitting alone
+Even if any of the thread is blocked it will result in delay in other clients request.
+
+
+
+@Improved Workflow & Debugging
+# npm init :
+To initialize package.json(configuration purpose and save module versions).
+{
+"name": "node-training",
+"version": "1.0.0",
+"description": "Project for training purpose",
+"main": "app.js",
+"scripts": {
+"test": "echo \"Error: no test specified\" && exit 1",
+"start": "node app.js". -start is reserved keyword and put your code as value
+},
+Now, npm start will run node app.js (Easy for others to spin server)
+
+"scripts": {
+"test": "echo \"Error: no test specified\" && exit 1",
+"start": "node app.js",
+"start-server": "node app.js". -st..-server is unreserved so to use (npm run start-server)
+},
+
+
+
+
+~ Tilde:
+~ freezes major and minor numbers.
+~1.2.3 will match all 1.2.x versions, but it will miss 1.3.0.
+^ Caret:
+^ freezes the major number only.
+^1.2.3 will match any 1.x.x release including 1.3.0, but it will hold off on 2.0.0.
+
+
+
+
+# npm i nodemon --save-dev 
+Upto - - save(production/dev) & - - save-dev(only dev)
+
+The last lectures contained important concepts about available Node.js features and how to unlock them.
+You can basically differentiate between:
+Global features: Keywords like const or function but also some global objects like process
+Core Node.js Modules: Examples would be the file-system module ("fs"), the path module ("path") or the Http module ("http")
+Third-party Modules: Installed via npm install - you can add any kind of feature to your app via this way
+Global features are always available, you don't need to import them into the files where you want to use them.
+Core Node.js Modules don't need to be installed (NO npm install is required) but you need to import them when you want to use features exposed by them.
+Example:
+const fs = require('fs');
+You can now use the fs object exported by the "fs" module.
+Third-party Modules need to be installed (via npm install in the project folder) AND imported.
+
+
+# NODEMON
+"start": "nodemon app.js”,
+
+Now just do npm start
+
+
+
+# USE DEBUG CONSOLE FOR DEBUGGING
+https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_launch-configuration-attributes
+ADD Configuration for Auto Restart  during Debugging
+(Menu) Debug > ADD Configuration
+{
+// Use IntelliSense to learn about possible attributes.
+// Hover to view descriptions of existing attributes.
+// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+"version": "0.2.0",
+"configurations": [
+{
+    "type": "node",
+    "request": "launch",
+    "name": "Launch Program",
+    "skipFiles": ["<node_internals>/**"],
+    "program": "${workspaceFolder}/app.js",
+    //ADD THESE 3 LINES FOR AUTO STARTING DEBUG & SERVER IN CHANGES
+    "restart": true, (1)
+    "runtimeExecutable": "nodemon", (2)
+    "console": "integratedTerminal”, (3)
+    //“program”: is used to mention here what file to Run(We have defined during app.js it’s same,so no need)
+}
+]
+}
+//NOW TERMINAL / DEBUGGING DATA BOTH - INSIDE TERMINAL.
+
+@ctrl+C -> do it as it won’t quit automatically & again start (TO RUN ONLY SERVER)
+@ But when NOT Debugging better use npm start rather than “start debugging”
+
+
+
+
+
+@Express.js
+Express.js is a Node.js Framework consisting of functions() which makes working with node easy.
+Now, we don’t have to worry about low level programming we did till now !! ( As it’s difficult )
+
+Unlike its competitors like Rails and Django, which have an opinionated way of building applications, Express has no "best way" to do   something. It is very flexible(easy 3rd party middleware) and pluggable (mutiple middlewares).
+
+
+
+# req, res here are modified by express as MORE Functionality added
+const http = require("http");
+
+const express = require("express”); //returns function
+const app = express(); //call function to get all functionality in app.
+//use takes array of requet Handler, to goto next Handler - next(), 
+//But, we will do easy method of that
+app.use((req, res, next) => {
+    console.log("In Middleware");
+    next();  //==>calls next Middleware
+});
+
+app.use((req, res, next) => {
+    console.log("Second Middleware");
+    next();
+});
+
+const { Routes } = require("./routes");
+
+const server = http.createServer(app);//createServer accepts app
+
+server.listen(3000, "localhost", () => {
+    console.log("Server is started");
+});
+
+# Middleware’s:
+Will be executed one after another synchronously.
+Either do next() or send response from last middleware.
+app.use((req, res, next) => {
+    console.log("In Middleware");
+    next();
+});
+
+app.use((req, res, next) => {
+    console.log("Second Middleware");
+    res.send("<h1>Hey Man I got here bcoz of Express</h1>");
+
+//res.send() can return any type of Data(Express Functionality)
+//headers as text/html are automatically set by Express
+});
+# Using Express for creating Server/Listening
+const server = http.createServer(app);
+    server.listen(3000, "localhost", () => {
+        console.log("Server is started");
+});
+
+THE CODE ABOVE CAN BE REPLACED BY BELOW ( THANKS TO EXPRESS )
+
+app.listen(3000); // both things - createServer and listen is done by Express
+
+
+@Build Endpoint using Express.js
+const http = require("http");
+const express = require("express");
+const app = express();
+
+const { Routes } = require("./routes");
+
+app.use((req, res, next) => { //general middleware which runs every time
+    console.log("Will Run every time");
+    next();
+});
+
+app.use("/show-posts", (req, res, next) => { //when baseURL/show-posts
+    res.send("<h1> These are the posts</h1>");
+});
+
+//use takes array of request Handler
+app.use("/", (req, res, next) => { //when baseURL/
+    res.send("<h3>THIS IS HOME SCREEN / PATH");
+});
+
+app.listen(3000, "localhost", () => {
+    console.log("Started on Port 3000");
+});
+
+
+
+
+
+#Parse Request From Browser
+const bodyParser = require("body-parser");
+
+//to parse all data sent by browser - it's a middleware (it has next() inside to execute next mdleware)
+app.use(bodyParser.urlencoded({ extended: false }));
+ This object will contain key-value pairs, where the value can be a string or array (when extended is false), or any type (when extended is true).
+
+
+#Request Endpoints
+app.use(“path”, ()=> {} ) - accepts any kind of request for path
+app.get(“path”, ()=> {}) - only get
+app.post(“path”, ()=> {}) - only post, similarl we have delete,patch,put
+
+
+
+#Express Router
+routes>home.js
+const express = require("express");
+const router = express.Router();
+
+router.get("/favicon.ico", (req, res, next) => { => Just to handle favicon request
+console.log("==========FAV_CALL===========");
+res.sendStatus(200);
+});
+
+router.get("/add-product", (req, res, next) => { => url must be exact (as get is used & not use }
+res.send(
+`<form action='/product' method='POST'>
+<input name='username'/>
+<button type='submit'>Submit</button>
+</form>`
+);
+});
+
+module.exports = router;
+
+
+
+app.js
+const express = require("express");
+const app = express();
+const bodyParser = require("body-parser");
+
+const adminRoutes = require("./routes/admin");
+const shopRoutes = require("./routes/shop");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(adminRoutes); //router is exported from routes > admin.js
+app.use(shopRoutes); //router is inserted ->exported from routes > home.js
+
+app.use((req, res, next) => { //Handle 404 - Every method and url will be handled here
+res.status(404).send("<h1>You have lost your Way</h1>");
+
+// res.status(404).sendFile(path.join(__dirname,”views”,”404.html”)
+});
+
+app.listen(3000, "localhost", () => {
+console.log("Started on Port 3000");
+});
+@status(404) can be chained before send(“") ( also other moethods can be chained like setHeaders() )
+
+
+
+handelling routes path efficiently
+app.use("/admin", adminRoutes); //admin Routes will be starting with /admin
+
+app.use("/shop", shopRoutes); //shopRoutes will be startig from shop
+
+
+
+
+
+#HTML PAGE AS A RESPONSE
+
+# sendFile() - send html page as a response !!
+const path = require("path");
+const express = require("express");
+const router = express.Router();
+
+router.get("/add-product", (req, res, next) => {
+res.sendFile(path.join(__dirname, "../", "views", "add-product.html"));
+}); 
+//path.join is used as Node server can be on different OS- it detects OS and decide “/“or “\"
+
+router.post("/product", (req, res, next) => {
+console.log("Data Sent By Browser::", req.body.username);
+res.redirect("/shop");
+});
+
+module.exports = router;
+
+
+
+
+
+
+
+# util > path.js (To get the directory From Root /User/file/sdlkf/projectName)
+const path = require("path”);
+
+module.exports = path.dirname(process.mainModule.filename);
+//process is Global Var.
+//mainModule is our Main Module - app.js
+//filename will be ...path.../app.js
+//We want it's directort so path.dirname
+
+
+
+
+
+
+ # importing project directory from utility(above)
+const path = require("path”);
+. . . . . . . . . . . . . .
+const dirName = require("../util/path”); //import the dirName from root(above)
+
+router.get("/add-product", (req, res, next) => {
+res.sendFile(path.join(dirName, "views", "add-product.html"));
+});
+
+
+
+
+
+
+# To use external css style
+app.use(express.static(path.join(__dirname, "public")));
+Now all static Resource like Css, JS, Image will be looked in public. It’s only directory accessible to users
+
+
+
+
+
+
+#Data Can be shared among requests and clients 😮
+const path = require("path");
+
+const express = require("express");
+
+const rootDir = require("../util/path");
+
+const router = express.Router();
+
+const products = [];//this will manage it’s space in memory till server is running
+
+//---- /admin/add-product => GET
+router.get("/add-product", (req, res, next) => {
+res.sendFile(path.join(rootDir, "views", "add-product.html"));
+});
+
+//---- /admin/add-product => POST
+router.post("/add-product", (req, res, next) => {
+products.push({ title: req.body.title });
+res.redirect("/");
+});
+
+exports.routes = router;
+exports.products = products; //above product array is exported and other routes would receive them
+
+
+@Templating Engine
+Inside HTML - dynamic Variable can be inserted ( HTMLish Template)
+Templating Engine will fill the variable and serve it to client.
+
+
+ # Available Templating Engines
+1.Ejs
+<p> <%= name %> </p>
+
+2.Pug(Jade)
+p #name
+
+3.Handlebars
+<p>{{ name }}</p>
+
+
+
+
+
+
+
+#To use Pug > app.js
+app.set("view engine", "pug”); //set helps in setting some keys in Node - provide value!
+app.set("views", "views”);  //where to find pug views ? - at “views”-folder
+
+
+
+
+
+
+#Rendering > app.js
+router.get("/", (req, res, next) => {  
+console.log("In /", adminData.products);
+res.render("shop.pug"); //render will use view engine-pug & folder views we already selected
+});
+
+
+
+
+
+
+
+#PUG Template Syntax
+<!DOCTYPE html>
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        title Document
+        link(rel="stylesheet", href="/css/main.css")
+        link(rel="stylesheet", href="/css/product.css")
+
+    body
+        header.main-header
+            nav.main-header__nav
+                ul.main-header__item-list
+                    li.main-header__item
+                        a.active(href="/") Shop
+                    li.main-header__item
+                        a(href="/admin/add-product") Add Product
+    main
+        h1 My Products
+        p List of All Products    
+
+
+
+
+
+
+#Sending Dynamic Data to Pug
+router.get("/", (req, res, next) => {
+      let products = adminData.products;
+
+    res.render("shop.pug", { products: products, title: "E-Planet" });
+});
+
+
+
+
+
+
+#Using Dynamic Data in Pug #{data}
+.grid
+if products.length > 0
+each product in products
+article.card.product-item
+header.card_header
+h1.product_title #{product.title}
+div.card_image
+img(src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png", alt="A Product", height="180px", width="150px")
+.card_content
+h2.product_price $19.99
+p.product_description A very interesting book about so many even more interesting things!
+.card_actions
+button.btn Add To Cart
+e;s else
+h1 No Product Found!
+
+
+
+
+
+
+
+
+
+#Remove Redundancy in Pug
+>views >layouts >header.pug
+<!DOCTYPE html>
+html(lang="en")
+head
+meta(charset="UTF-8")
+meta(name="viewport", content="width=device-width, initial-scale=1.0")
+meta(http-equiv="X-UA-Compatible", content="ie=edge")
+title #{pageTitle}
+link(rel="stylesheet", href="/css/main.css")
+block styles //here styles will be kept
+body
+header.main-header
+nav.main-header__nav
+ul.main-header__item-list
+li.main-header__item
+a(href="/", class=(path==="/shop" ? "active" : "")) Shop
+li.main-header__item
+a(href="/admin/add-product", class=(path==="/admin/add-product" ? "active" : "")) Add Product
+block main //here main content will be replaced
+>shop.pug (Makes use of above layout
+extends layouts/header.pug
+
+block styles //will be replaced in header.pug file
+link(rel=stylesheet, href="/css/product.css")
+
+
+block main //will be replaced in main file
+main
+h1 My Products
+.grid
+if products.length > 0
+each product in products
+article.card.product-item
+header.card__header
+h1.product__title #{product.title}
+div.card__image
+img(src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png", alt="A Product", height="130", width="130")
+.card__content
+h2.product__price $19.99
+p.product__description A very interesting book about so many even more interesting things!
+.card__actions
+button.btn Add To Cart
+else
+h2 No Product Found!
+
+
+
+
+
+
+
+
+
+#Handlebars@3.0 (Currently, lot of Changes are done)
+Use express-handlebars as better compatible with express
+handlebars is not minimalistic html (like pug) rather simple html with dynamic data
+#Handlebar Configuration
+different as it’s not auto configed in node (like pug)
+const hbs = require("express-handlebars”); //get it
+
+
+
+app.engine("hbs", hbs()); //app.engine helps in getting feature of template in hbs
+app.set("view engine", "hbs”); //set hbs as the view engine (Keep files also .hbs now)
+app.set("views", "views”); //where are hbs files kept (no need as autofinds in views)
+
+
+#Handlebar Template Syntax
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>{{ pageTitle }}</title> //Putting Dynamic Content
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+<header class="main-header">
+<nav class="main-header__nav">
+<ul class="main-header__item-list">
+<li class="main-header__item"><a class="active" href="/">Shop</a></li>
+<li class="main-header__item"><a href="/admin/add-product">Add Product</a></li>
+</ul>
+</nav>
+</header>
+
+<main>
+<h1>My Products</h1>
+<p>List of all the products...</p>
+{{#if hasProducts}} //#if accepts only true false( conditions like a>0 etc not allowed in hbs )
+<div class="grid">
+{{#each products}} //#each will put each iteration data in "this"
+<article class="card product-item">
+<header class="card__header">
+<h1 class="product__title">{{ this.title }}</h1> //this refers to current iteration
+</header>
+<div class="card__image">
+<img src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png" alt="A Book"
+height="100" width="100">
+</div>
+<div class="card__content">
+<h2 class="product__price">$19.99</h2>
+<p class="product__description">A very interesting book about so many even more interesting things!
+</p>
+</div>
+<div class="card__actions">
+<button class="btn">Add to Cart</button>
+</div>
+</article>
+{{/each}} //#each stopped here
+</div>
+{{else}} //else doesn't contain # and no need to close !
+<h3>No Products Found</h3>
+{{/if}} //if is closed here
+</main>
+</body>
+
+
+
+
+
+
+
+
+#Handlebar Template Syntax
+. . . . . . . . . . . . .
+const hbs = require("express-handlebars");
+
+const app = express();
+
+//{}layoutDir and defaultLayput have to be defined in handlebars(TO USE LAYOUT)
+app.engine(
+"hbs",
+hbs({ layoutDir: "views/layouts/", defaultLayout: "header.hbs" })
+);
+app.set("view engine", "hbs");
+app.set("views", "views");
+
+. . . . . . . . . . . . .
+
+
+
+
+
+#Layout in Handlebars
+views>layouts>header.hbs
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>{{ pageTitle }}</title>
+<link rel="stylesheet" href="/css/main.css">
+{{#if formCSS}}
+<link rel="stylesheet" href="/css/forms.css">
+{{/if}}
+{{#if productCSS}}
+<link rel="stylesheet" href="/css/product.css">
+{{/if}}
+</head>
+<body>
+<header class="main-header">
+<nav class="main-header__nav">
+<ul class="main-header__item-list">
+<li class="main-header__item"><a class="{{#if homeRoute}} active {{/if}}" href="/">Shop</a></li>
+<li class="main-header__item"><a class="{{#if addProductRoute}}active {{/if}}"
+href="/admin/add-product">Add Product</a></li>
+</ul>
+</nav>
+</header>
+
+{{{body}}} //Automatically hbs file data will be filled here in body
+</body>
+
+</html>
+INSIDE VIEW NOW JUST WRITE WHAT IS REQUIRED, IN {{{ BODY }}} ABOVE
+
+
+
+
+
+
+#EJS(Embedded JS) - supported by express just like pug
+app.set("view engine", "ejs");
+app.set("views", "views");
+
+
+
+
+
+#Condition, loop in Ejs
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title><%=pageTitle%></title> //use = when want to output
+<link rel="stylesheet" href="/css/main.css" />
+<link rel="stylesheet" href="/css/product.css" />
+</head>
+
+<body>
+<header class="main-header">
+<nav class="main-header__nav">
+<ul class="main-header__item-list">
+<li class="main-header__item"><a class="active" href="/">Shop</a></li>
+<li class="main-header__item">
+<a href="/admin/add-product">Add Product</a>
+</li>
+</ul>
+</nav>
+</header>
+
+<main>
+<h1>My Products</h1>
+<p>List of all the products...</p>
+<% if(products.length>0){ %> //simple JS is used inside <% %>
+<div class="grid">
+<% for(let product of products) { %> //or products.forEach(prod=>{
+<article class="card product-item">
+<header class="card__header">
+<h1 class="product__title"><%= product.title%></h1>
+</header>
+<div class="card__image">
+<img
+src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png"
+alt="A Book"
+height="100"
+width="100"
+/>
+</div>
+<div class="card__content">
+<h2 class="product__price">$19.99</h2>
+<p class="product__description">
+A very interesting book about so many even more interesting
+things!
+</p>
+</div>
+<div class="card__actions">
+<button class="btn">Add to Cart</button>
+</div>
+</article>
+<% } %> //close bracket
+</div>
+<% } else { %>
+<h2>No Products Currently</h2>
+<% } %>
+</main>
+</body>
+</html>
+
+
+
+
+
+#Includes-Partials in EJS
+<%- include("includes/head.ejs") %> //“-“ means put html here and don’t consider it string
+<link rel="stylesheet" href="/css/product.css" />
+</head>
+
+<body>
+<%-include("includes/navigation.ejs") %>
+<main>
+<h1>My Products</h1>
+<p>List of all the products...</p>
+<% if(products.length>0){ %>
+<div class="grid">
+<% for(let product of products) { %>
+<article class="card product-item">
+. . . . . . . . . . . . . . . . . . . . . . . . . . . .
+</div>
+</article>
+<% } %>
+</div>
+<% } else { %>
+<h2>No Products Currently</h2>
+<% } %>
+</main>
+<%- include("includes/foot.ejs") %>
+//here head, navigation, foot are partials
+
+
+
+
+
+#Partial - Navigation.ejs
+views>includes>navigation.ejs
+<header class="main-header">
+<nav class="main-header__nav">
+<ul class="main-header__item-list">
+<li class="main-header__item"><a class="<%= path ==='/shop' ? 'active' : ''%>" href="/">Shop</a></li>
+<li class="main-header__item">
+<a class="<%= path ==='/admin/add-product'?'active':''%>" href="/admin/add-product">Add Product</a>
+</li>
+</ul>
+</nav>
+</header>
+
+
+Templating Engine do some caching behind the scene, when the output is same, it just returns cache rather than sending resonse again!
+
+
+
+
+
+
+@MVC ARCHITECTURE
+We use MVC pattern for Seperation of Concern !
+Models represents the data
+View represents what user sees
+Controller connects model/views and logic in doing it !(Route comes in Controller)
+
+
+
+#Controller
+>controller>product.js
+const Product = require("../models/product”); //class for MODELS
+
+exports.getAddProductPage = (req, res, next) => {
+res.render("add-product.ejs", {
+path: "/admin/add-product",
+pageTitle: "Add Product",
+formCSS: true,
+productCSS: true,
+addProductRoute: true
+});
+};
+
+exports.postProductRoute = (req, res, next) => {
+const product = new Product(req.body.title);
+product.save();
+res.redirect("/");
+};
+
+#Routes will send user to Controller
+const express = require("express");
+const router = express.Router();
+
+
+const productController = require("../controller/product");
+
+//---- /admin/add-product => GET
+router.get("/add-product", productController.getAddProductPage);
+
+//---- /admin/add-product => POST
+router.post("/add-product", productController.postProductRoute);
+
+module.exports = router;
+
+
+
+#Data Handedlling from controller is shifted to Models
+const products = [];
+
+module.exports = class Product { //it's a class(you can also make a func-ES5)
+constructor(title){
+this.title = title;
+}
+
+save = () => {
+console.log("THIS KEYWORD IS :::::>>>>", this)
+products.push(this);
+}
+
+static getProducts = () =>{ //static so that call directly with class name
+return products;
+}
+}
+
+
+
+
+
+#Store Data in a FILE !!!!
+const path = require("path");
+const fs= require("fs");
+
+const baseRoute = require("../util/path");
+
+
+module.exports = class Product {
+constructor(title){
+this.title = title;
+}
+
+save = () => {
+fs.readFile(path.join(baseRoute, "data", "products.json"),(err, fileData)=>{
+if(err){
+console.log("Error is ===>",err);
+}else{
+const productsExtracted = JSON.parse(fileData); //parse data when you read it !
+productsExtracted.push(this);
+fs.writeFile(path.join(baseRoute, "data", "products.json"), JSON.stringify(productsExtracted), (err)=>{
+console.log("Error is there @@@@@@@", err); // stringify data while storing it
+});
+}
+});
+}
+
+static getProducts = (cb) =>{
+fs.readFile(path.join(baseRoute, "data", "products.json"), (err, fileData)=>{
+if(err){
+cb([]);
+}
+cb(JSON.parse(fileData));
+});
+}
+}
+
+
+
+
+
+
+OVERVIEW -
+View should contain least logic as possible.
+Keep data related logic in Model and maybe in Controller.
+
+
+
+
+
+
+
+# To Send Data to Partials - used when from loop have to send data
+
+<%- include("../includes/add-to-cart.ejs", {product:product}) %>
+
+
+
+
+  #req.body.id ===> action=“post” in form (use bodyParser)
+
+
+# Dynamic Routing - Creating Route on the fly !!
+req.params.id ===> /:id
+req.query.id ===> ?id=x
+
+
+
+
+
+
+
+
+
+
+
+
+#Use mysql2 - for working with core mysql
+const mysql = require("mysql2");
+
+const pool = mysql.createPool({ //pool will help to get connection from it
+host:"localhost",
+user:"root",
+password:"12345678",
+database:"shopdb"
+});
+
+module.exports = pool.promise(); //promise will help to return promise !
+Making connection for every query is not optimal !!
+Rather use connection pool from where you can take connection and leave it back there after use . . . .
+#Execute commands using db !!
+const db = require("../util/database");
+const Cart = require("./cart");
+module.exports = class Product {
+constructor(productId, title, price, imageURL, description){
+if(productId){
+this.productId = productId;
+}else{
+this.productId = Math.random().toString();
+}
+this.title = title;
+this.price = price;
+this.imageURL = imageURL;
+this.description = description;
+}
+save = () => {
+//this way - ‘?’ mysql will prevent insertion of
+return db.execute("insert into shop(title,price,description,imageURL, productId) values (?,?,?,?,?)",
+[ this.title,
+this.price,
+this.description,
+this.imageURL,
+this.productId
+]);
+}
+
+static getProducts = () =>{
+return db.execute("select * from shop");
+}
+static getProductDetails = (id)=> {
+return db.execute("SELECT * FROM shop WHERE productId = ?", [id]);
+};
+}
+
+
+
+# But, mysql2 package must be used only when :
+We don’t have much complex relations
+We know sql very well deeply !!
+
+
+
+@Sequelize - An ORM Library
+#ORM - Object Relationship Mapping
+It makes SQL Quering Easy >> so we don’t have to write complex sql queries.
+Just like knew.js
+
+const Sequelize = require("sequelize");
+
+const sequelize = new Sequelize('shopdb', 'root', '12345678',
+{dialect: 'mysql', host:'localhost'});
+
+module.exports = sequelize;
+
+
+
+
+
+
+
+
+
+
+
+#Defining the Model Using ORM
+const Sequelize = require("sequelize”); //Required for Data Types
+const sequelize = require("../util/database”); //Provides fn like define
+
+//here we don’t define class rather use sequelize"
+//{attributes} passed defines Model and automatically made db Table !!!
+
+const Product = sequelize.define('product', { //‘product’ is name of model ! Must be small !
+id:{
+type: Sequelize.Integer,
+autoIncrement: true,
+primaryKey: true,
+allowNull: false
+},
+title:{
+type: "String",
+allowNull:false,
+},
+price:{
+type: Sequelize.DOUBLE,
+allowNull: false,
+},
+description:{
+type: Sequelize.TEXT,
+allowNull: false
+},
+imageURL: {
+type: Sequelize.STRING,
+allowNull: false
+},
+productId:{
+type: Sequence.STRING,
+unique: true,
+allowNull: false
+}
+},{tableName: “table-name" }) // this is option !
+module.exports = Product;
+
+
+#Sync( ) sequelizer so to make Table from Models !!!
+const sequelize = require("./util/database”); //import so that above model could be run
+
+. . . . . . . . . . . . . . . . . .
+
+sequelize.sync().then(result=>{ //if Table exists then again won’t me made
+app.listen(3000, "localhost", () => {
+console.log("Server Started at Port 3000");
+});
+}).catch(err=>{
+console.log("Model Can't be Made==> ", err);
+});
+
+User.sync() - This creates the table if it doesn't exist (and does nothing if it already exists)
+User.sync({ force: true }) - This creates the table, dropping it first if it already existed
+User.sync({ alter: true }) - This checks what is the current state of the table in the database (which columns it has, what are their data types, etc), and then performs the necessary changes in the table to make it match the model.
+Now, as we have a Model using ORM - It gives READYMADE FUNCTION ! 🤩
+#model_name.create({ })
+const Product = require("../models/product");
+
+exports.postProductRoute = (req, res, next) => {
+const title = req.body.title;
+const price = req.body.price;
+const imageURL = req.body.imageURL;
+const description = req.body.description;
+
+Product.create({ //create is provided by sequelize model !!
+title:title,
+price: price,
+imageURL: imageURL,
+description: description,
+productId: Math.random().toString()
+}).then(result=>{
+console.log("Result is ==> ", result);
+}).catch(err=> {
+console.log("ERROR IN CREATION ==> ",err);
+});
+};
+
+
+#DEFINING RELATIONS IN MODELS. . . . . . . . .
+A.hasOne(B, { /* options */ });
+A.belongsTo(B, { /* options */ });
+A.hasMany(B, { /* options */ });
+A.belongsToMany(B, { through: 'C', /* options */ }); //C will have aId, bId
+The order in which the association is defined is relevant. In other words, the order matters, for the four cases. In all examples above, A is called the source model and B is called the target model. This terminology is important.
+The A.hasOne(B) association means that a One-To-One relationship exists between A and B, with the foreign key being defined in the target model (B).
+The A.belongsTo(B) association means that a One-To-One relationship exists between A and B, with the foreign key being defined in the source model (A).
+The A.hasMany(B) association means that a One-To-Many relationship exists between A and B, with the foreign key being defined in the target model (B).
+Remember, to define Relation from both sides so that 
+- both Model knows about the Model Related to it !
+
+
+
+
+
+
+
+
+
+
+
+#TO DEFINE YOUR OWN FOEIGN KEY AND TARGET KEY
+Ship.belongsTo(Captain, { targetKey: 'name', foreignKey: 'captainName' });
+// This creates a foreign key called `captainName` in the source model (Ship)
+// which references the `name` field from the target model (Captain).
+
+
+
+
+
+Product.belongsTo(User, {constraints: true, onDelete:”CASCADE”});
+User.hasOne(Product);
+// this creates userId foreign key in product and id in User(target key)
+If already col exists then nothing is made.
+What is a foreign key with Cascade DELETE in SQL Server?
+A foreign key with cascade delete means that if a record in the parent table is deleted, then the corresponding records in the child table will automatically be deleted. This is called a cascade delete in SQL Server.
+
+#Using User to create products (Controller)
+exports.postProductRoute = (req, res, next) => {
+const title = req.body.title;
+const price = req.body.price;
+const imageURL = req.body.imageURL;
+const description = req.body.description;
+
+req.user.createProduct({ //automaticlly userId will be stored in product
+title: title,
+price: price,
+imageURL: imageURL,
+description: description,
+}).then(result=>{
+console.log("Result is ==> ", result);
+res.redirect("/admin/products");
+}).catch(err=> {
+console.log("ERROR IN CREATION ==> ",err);
+});
+};
+
+//We can also simply Product.create({userId:1 ….}) 
+#Already existing then-> set (Pass the Ref !)
+#Non existing -> create(Ref will be passed automatically)
+Foo.hasOne(Bar)
+fooInstance.getBar() //get all associated bar with foo ( here it will get only 1)
+fooInstance.setBar(B) //B is reference of Bar
+fooInstance.createBar() //Create a new Bar > Bar will have fooId automatically !!!
+Example:
+const foo = await Foo.create({ name: 'the-foo' });
+const bar1 = await Bar.create({ name: 'some-bar' });
+const bar2 = await Bar.create({ name: 'another-bar' });
+console.log(await foo.getBar()); // null -foo doesn’t know bar as no ref
+await foo.setBar(bar1); //pass reference of other model.
+console.log((await foo.getBar()).name); // 'some-bar'
+await foo.createBar({ name: 'yet-another-bar' });
+const newlyAssociatedBar = await foo.getBar();
+console.log(newlyAssociatedBar.name); // 'yet-another-bar'
+await foo.setBar(null); // Un-associate
+console.log(await foo.getBar()); // null
+Foo.belongsTo(Bar)
+The same ones from Foo.hasOne(Bar):
+fooInstance.getBar()
+fooInstance.setBar()
+fooInstance.createBar()
+Foo.hasMany(Bar)
+fooInstance.getBars()
+fooInstance.countBars()
+fooInstance.hasBar()
+fooInstance.hasBars()
+fooInstance.setBars()
+fooInstance.addBar() //add a Bar’s Reference to Foo (hasMany)
+fooInstance.addBars()
+fooInstance.removeBar(B) //remove B (bar referenced) from foo !!!
+fooInstance.removeBars()
+fooInstance.createBar()
+Example:
+const foo = await Foo.create({ name: 'the-foo' });
+const bar1 = await Bar.create({ name: 'some-bar' });
+const bar2 = await Bar.create({ name: 'another-bar' });
+console.log(await foo.getBars()); // []
+console.log(await foo.countBars()); // 0
+console.log(await foo.hasBar(bar1)); // false
+await foo.addBars([bar1, bar2]);
+console.log(await foo.countBars()); // 2
+await foo.addBar(bar1);
+console.log(await foo.countBars()); // 2
+console.log(await foo.hasBar(bar1)); // true
+await foo.removeBar(bar2);
+console.log(await foo.countBars()); // 1
+await foo.createBar({ name: 'yet-another-bar' });
+console.log(await foo.countBars()); // 2
+await foo.setBars([]); // Un-associate all previously associated bars
+console.log(await foo.countBars()); // 0
+#To get User Related Products
+exports.getEditProductPage = (req, res, next) => {
+
+req.user.getProducts({ //now user (id =1) related products only fetched
+where: {
+productId: req.params.productId
+}
+}).then(([productDetails])=> {
+
+res.render("admin/edit-product.ejs", {
+path: "/edit/add-product",
+pageTitle: "Edit Product",
+formCSS: true,
+productCSS: true,
+addProductRoute: true,
+product: productDetails,
+editMode: true
+});
+});
+};
+#in many to many relationship
+You have to use a 3rd Table to store both tables id
+Just like cart-item stores cart and product details
+req.user.getCart()
+.then(cart=> {
+fetchedCart = cart;
+return cart.getProducts({
+where: {
+productId: req.body.productId
+}
+});
+}).then(products=>{
+//above from user we are getting his cart and then products from that cart/
+This will return cart related products using (3rd Table)- Also data data from 3rd table will be loaded.
+Product.belongsTo(User, {constraints: true, onDelete:"CASCADE"});
+User.hasMany(Product);
+Cart.belongsTo(User);
+User.hasOne(Cart);
+Cart.belongsToMany(Product, {through: CartItem});
+Product.belongsToMany(Cart, {through: CartItem});
+
+sequelize.sync().then(result=>{
+
+return User.findByPk(1);
+
+}).then(result=> {
+if (!result) {
+return User.create({ name: "Ashutosh", email: "ashu@gmail.com" });
+}
+return Promise.resolve(result);
+})
+.then(_=>{
+app.listen(3000, "localhost", () => {
+console.log("Server Started at Port 3000");
+});
+}).catch(err=>{
+console.log("Model Can't be Made==> ", err);
+});
+
+#Eager Loading
+exports.getOrdersPage = (req, res, next) => {
+req.user.getOrders({include: ["products"]}).then(orders=> {
+res.render("shop/orders.ejs", {
+pageTitle: "My Orders",
+path: "/orders",
+orders: orders
+});
+}).catch(err=>{
+console.log("ERROR IS ::::", err);
+})
+};
+
+Mention it as “products" as order is related to Product
+And Product is defined as “product” hence we write products.
+Now with Each order, products array will come 
+and inside each of them orderItem will be there(because it is defined through it)
+Remember Order.belongsToMany(Product,{through:OrderItem})
+#Update call using Node Driver in MongoDB
+prod.updateOne({_id: new mongodb.ObjectId( id )},{what update})
+
+
+
+@Using ODM - Mongoose
+Moongose is a ODM (Object Document Modelling). 
+just like ORM(Object Relationship Modelling) --> Sequelize.
+
+
+
+Making model in Mongoose
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+
+const ProductSchema = new Schema({
+title: {
+type: String,
+required: true
+},
+price: {
+type: String,
+required: true
+},
+description: {
+type: String,
+required: true,
+},
+imageURL: {
+type:String,
+required: true
+},
+productId: {
+type: String,
+required: true,
+},
+userId:{
+type:String,
+required: true
+}
+});
+module.exports = mongoose.model("Product", ProductSchema);
+Product will be changed to products(small and plural)
+3rd Argument give in case want required collection name
+
+
+#findById - Mongoose
+Product.findById(req.params.productId).then(result => {
+findById will find data where given Id - Id will auto converted to ObjectId by Mongoose
+
+
+#Selecting and populating a foreign key  ( IMPORTANT)
+Product.find().select("imageURL title -_id").populate("userId","name email -_id").then(products => {
+
+
+
+
+
+const userSchema = new Schema({
+ 
+name: {
+type: String,
+required: true
+},
+email : {
+type: String,
+required: true
+},
+cart : {
+items: [{ //if array contains only string just do [String]
+productId: {
+type: Schema.Types.ObjectId,
+required: true,
+ref: "Product"  //defining reference with other Model, will pick it's _id
+},
+quantity : {
+type: Number,
+required: true
+}
+}]
+}
+})
+
+
+//YOUR OWN METHOD IN MONGOOSE SCHEMA
+
+//necessary to write function()->as this will refer to "jisne call kiya"
+
+userSchema.methods.addToCart = function(productId){
+console.log("PROD*****CT Id ----", productId);
+
+let prodIndex = -1;
+let copiedCart = {...this.cart};
+
+if(!copiedCart.items){
+console.log("$$$$$$$$$$$$$$$$$", copiedCart.items);
+copiedCart.items.push({ productId: productId, quantity: 1 });
+this.cart = copiedCart;
+return this.save();
+}
+
+prodIndex = copiedCart.items.findIndex(item => {
+return item.productId.toString() === productId.toString();
+});
+if(prodIndex>=0){//Product Already Exists
+copiedCart.items[prodIndex].quantity++;
+}else{
+copiedCart.items.push({productId: productId, quantity: 1});
+}
+console.log("Copied Cart", copiedCart);
+this.cart = copiedCart;
+return this.save(); //this.save() will save the modified this (the schema defined)
+}
+
+
+//this will be taken from the req.user (as already we did find() and got the user)
+
+
+
+
+
+
+
+
+# .populate()
+Population does not occur unless a callback is passed or execPopulate() is called if called on a document. The result of Product.find() is a query and not a document so    you can call .populate() on it right away. req.user is a document so you must call execPopulate on it.
+$$ Important about Mongoose
+Populate doesn’t return Promise so we use execPopulate() with it (If we are putting populate on a document.
+If we are using populate with find() no need of execPopulate() as it’s not a doc rather cursor.
+
+.then() in mongoose are not real Promise ( Async Await used behind the scene).
+
+
+
+
+
+#Why data.productId in mongoose fetched _id only and why we use ._doc or.toObject() after spreading. {…data.productId._doc}
+
+Because the document contains some more information than just the properties that are stored in the database like the version number (__v) of the document or the _doc property itself; these are added by Mongoose when you fetch or create a document. In order to get just the properties, you can use ._doc or call .toObject() to get just the data you stored in the 
+database.
+
+
+
+
+
+
+
+
+@Session and Cookies
+
+#Cookie
+
+
+
+Cookies is data stored in client side ( Eg, If the user is locked in or not)
+Cookies is set by server by sending cookie data in header so that Browser could save it
+Browser then sends this cookies back to server in requests so server could know who is sending request !
+#How to know user Logged in ? Should I keep data in req ?
+Won’t puttin isLogged in Flag in Server(req) help ?
+Eg. req.isLoggedIn = True !
+No this above will work only for a single request !
+As soon as another request is send, isLoggedIn is no more there!
+Server doesn’t know anything about consecutive request (Every request is Brand New)
+!! As soon as response is sent — req is removed (Again new req comes) !!
+#Setting Cookie (Sending from server)
+res.setHeader("Set-Cookie", "auth=true");
+<—— Browser will accept and start sending the Cookie from next Requests Onwards ——>
+#Getting Cookie (In Server) req.get("Cookie”);
+
+
+
+
+#WARNING
+Cookies are not good to store Sensitive Data (like user token)
+Cookies can be changed in Browser by User - Application - Cookies - Change.
+Yet, we can store non essential data in Cookies..
+#Cookies are used in Tracking USER
+Tracking pixels are put in webpages, so with webpage, mail opening the websites cookies goes to them.
+This is not illegal and Google do it to to get your cookies and other info (screen resolution, OS).
+
+Say you have an ad on your site and someone clicks on that ad. The request will be directed to one of your tracking servers which will re-direct the request to the advertiser's page and set a cookie. Now when the user makes a purchase, there is usually a 1x1 image on the very last page after the order is submitted/paid for that sends a request to your tracking server again with the cookie (so you know it was from an ad on your site) plus the amount spent and any other details.
+Obviously this situation favors you since you control the tracking server and data which is why usually the merchant or a third party will collect the data, but that's the gist of it.
+
+
+
+#Strict / Lax / none in cookies
+
+Secure Optional
+A secure cookie is only sent to the server when a request is made with the https: scheme. (However, confidential information should never be stored in HTTP Cookies, as the entire mechanism is inherently insecure and doesn't encrypt any information.)
+Note: Insecure sites (http:) can't set cookies with the Secure attribute (since Chrome 52 and Firefox 52).
+HttpOnly Optional
+Forbids JavaScript from accessing the cookie, for example, through the Document.cookie property. Note that a cookie that has been created with HttpOnly will still be sent with JavaScript-initiated requests, e.g. when calling XMLHttpRequest.send() or fetch(). This mitigates attacks against cross-site scripting (XSS).
+SameSite=<samesite-value> Optional
+Strict: The browser sends the cookie only for same-site requests (that is, requests originating from the same site that set the cookie). If the request originated from a different URL than the current one, no cookies with the SameSite=Strict attribute are sent.
+Lax: The cookie is withheld on cross-site subrequests, such as calls to load images or frames, but is sent when a user navigates to the URL from an external site, such as by following a link.
+None: The browser sends the cookie with both cross-site and same-site requests.
+Asserts that a cookie must not be sent with cross-origin requests, providing some protection against cross-site request forgery attacks (CSRF).
+Strict means when in your own site - only then cookies will be sent
+    If link of your website is embedded outsite then it won’t send the cookies
+    Nor will it send the cookie if link is clicked from outside the site
+    Lax is same as strict just a difference is that,
+    If link is clicked from outside ( IT WILL SEND THE COOKIE !)
+    None will send the cookie (So you can embedd and use - embedded youtube)
+    Secure : Means the request must come from https address only (Only then send cookie)
+    
+#Delete Cookie after 15 sec
+res.setHeader("Set-Cookie", "auth=true; max-age=15");
+
+
+
+
+#Expire cookie after on date specified
+res.setHeader("Set-Cookie", "auth=true; expires=!date!");
+
+
+
+#Send Cookie only when request comes from https
+res.setHeader("Set-Cookie", "auth=true; secure");
+
+
+#Don't let client access the cookies(More Secured)
+res.setHeader("Set-Cookie", "auth=true; httpOnly");
+
+#Session
+
+
+Session is stored in server side.
+A hash is generated in server which is stored in cookies.
+Session data is stored in database.
+
+
+#use npm i express-session (External package by Express)
+const session = require("express-session”);
+app.use(session({secret:"AShop", resave: false, saveUninitialized: false}));
+
+@You can also config cookie , cookie: {ageMax: 20} <-like this above
+saveUninitialized is for saving sessions that are new, but have not been modified. If you set it to false then empty sessions won't be stored in the database.
+resave is for persisting sessions that aren't changed so they aren't deleted in the future automatically. For example, if a user visits your site but doesn't modify their session (i.e. maybe they're just browsing) then their session is kept active. (WILL IMPROVE PERFORMANCE)
+#Setting value for a session
+exports.postLogin = (req,res,next) => {
+req.session.loggedIn = true; //key loggedIn set as true in cookie (Hashed)
+res.redirect("/");
+}
+loggedIn=true will be saved in clients computer as Cookie(Hashed) ! (Secret we already defined)
+As we didn’t mentioned period, session will destroy as we close browser ! ! !
+~cookie will be visible as (In dev tools>application)
+~ connect.sid <- sessionId value will be hash!!!!
+NOTE:
+Note If both expires and maxAge are set in the options, then the last one defined in the object is what is used.
+#Make store so data can be stored in MongoDB Cloud
+const MONGODB_URI = "mongodb+srv://ashutosh:qtUjRW5q8Tmcfs5c@ashutosh.htqxz.mongodb.net/myshop";
+
+const store = new MongoDBStore({
+
+uri: MONGODB_URI,
+collection: “sessions"
+}, error =>{
+console.log("ERROR STORING SESSION ====> ", error);
+})
+
+
+
+app.use(session({secret:"AShopPlanetRehearsed", resave: false, saveUninitialized: false, store: store}));
+
+
+#Making Session on login !!
+exports.postLogin = (req,res,next) => {
+User.findOne().then(user=> {
+req.session.user = user;
+res.redirect("/login”); //res.session.save() will be called automatically after this!!
+}).catch(err=> {
+console.log("ERROR WHILE LOGGING I ===> ", err);
+})
+}
+            Data will be kept in mongoDB collection in Cloud.
+IMPORTANT
+req.session.save() will be called automatically after http response is sent !!
+Data will be saved as object (methods are not included while saving)
+Every client has a unique session id and our middleware looks up the document in the database that corresponds with that session id.
+
+
+#Deleting a Cookie
+exports.logout = (req,res,next) => {
+req.session.destroy((err)=>{
+if(err){
+console.log("ERROR OCCURED ===> ", err);
+}
+console.log("DESTROYED !!!");
+res.redirect("/login");
+});
+}
+    This will remove session data of that user from Database
+    BUT!!! Cookie will still be lying with Client (Of no use)
+    So, after login, new cookie will replace old cookie !!!
+
+
+
+
+
+
+#Redirect Only after session is stored !!
+Otherwise if we don’t so session.save(), redirect() will be called too fast !!
+exports.postLogin = (req,res,next) => {
+User.findOne().then(user=> {
+req.session.user = user;
+req.session.save(err=> {
+if(err){
+console.log("ERROR WHILE SAVING SESSION ====> ", err);
+}else{
+res.redirect("/");
+}
+});
+}).catch(err=> {
+console.log("ERROsR WHILE LOGGING I ===> ", err);
+})
+}
+
+
+
+
+
+
+#What are Session Cookies ?
+Session cookies are the cookies which will be destroyed as soon as browser is closed
+
+
+
+
+#What are Permananet Cookies ?
+Cookies which are not destroyed after closing browser!
+Expires or maxAge must be defined to make it permanent
+
+
+
+
+
+
+
+Sessions are used with Cookies !!
+
+
+
+
+
+
+
+
+
+
+
+
+
+@Authentication
+
+
+A Traditional Approach for Auth As We are doing it here
+As we are using views in server so we have to do session based Authentication !
+
+
+
+
+
+
+
+
+@CSRF ATTACKS
+
+
+
+>Link comes to your mail
+>Website opens which looks like original
+>Request goes to send money to ‘C’s account.
+>Browser has valid cookie so server finds it valid and sends money...
+
+
+#So, WHAT IS REALLY REQUIRED?
+Only actions taken from our own view are validated by server
+
+
+
+
+#SET PERMANENT RESPONSE USING MIDDLEWARE
+// csrf data - handelled in Session by default
+const csrf = require("csurf”); //CSURF PACKAGE IS USED
+const csrfProtection = csrf();// by default this will store data in session !!
+
+app.use(session({secret:"AShopPlanetRehearsed", resave: false, saveUninitialized: false, store: store}));
+
+// set middelware after session - data stored in session
+app.use(csrfProtection);
+app.use((req,res,next)=> {
+res.locals.csrfToken = req.csrfToken();
+res.locals.isAuthenticated = req.session.user;
+next();
+})
+Now, for each response rendered locals data will be sent. . . . 
+
+
+
+
+
+@SENDING EMAILS
+We don’t implement our own Mailing Server, rather we take help of a 3rd party library. 
+
+Because handelling mail server is tidious task and requires
+Security
+Handelling Mails
+Rather we take help of some 3rd party package(Everyone does)
+
+
+1.
+npm i nodemailer
+
+2.
+const nodemailer = require("nodemailer”);
+
+
+3.
+const transport = nodemailer.createTransport({
+host: process.env.HOST_NODEMAILER,
+port: process.env.PORT_NODEMAILER,
+auth: {
+user: process.env.USER_NODEMAILER,
+pass: process.env.PASS_NODEMAILER
+}
+});
+
+
+4.
+const mailOptions = {
+to:
+from: process.env.FROM_NODEMAILER,
+subject:
+html:
+};
+
+
+5.
+transport.sendMail(mailOptions,(error, info)=>{
+if(error){
+console.log("ERROR WHILE SENDING MAIL =====> ", error);
+}
+});
+
+
+
+
+
+
+NPM WARNINGS HANDELLING
+
+npm outdated - to check what package have problem
+npm i pack_name@latest —save
+npm audit fix
+npm audit fix - -force
+
+Do "npm audit" to manually check vulnerability and fix manually
+
+
+
+
+@VALIDATION
+
+
+
+
+
+
+
+
+#USING express-validator(wrapper around validator)
+
+router.post(
+"/signup",
+[ //MAke Array FoR ReaDability
+check("email”) //check will check body, param, header, cookie, query for email
+.isEmail()
+.withMessage("Email is invalid")
+.custom((email, { req }) => { //custom wants true/false, error-thrown/true or Promise Rejection/Nothing
+return User.findOne({email: email}).then(user=>{
+if(user){
+return Promise.reject("Email already Exists!");
+}
+});
+}),
+body("password", "Min 6 password required”) //Message can be given with field
+.isLength({ min: 6 }),
+body("confirmPassword").custom((value, {req})=> {
+if(value !== req.body.password){
+throw new Error("Password doesn't Match, please try again");
+}
+return true;
+})
+],
+authController.postSignup
+);
+//custom wants true/false, error-thrown/true or Promise Rejection/Nothing
+check will check field in all possible entries . . .
+body will check field only in body. . .
+We have params, query etc. too!
+> Validation will stop at custom(Promise Returned) Till it completes
+
+!!
+Above we checked if email exists before control reaches Controller
+
+
+
+#.noEmpty OR .not().isEmpty() to check if empty
+router.post(
+"/signup",
+[
+body("name").notEmpty().withMessage("Please fill your name!").isLength({min:2}).withMessage("Name is too short!").isLength({max:40}).withMessage("Name is too long!"),
+check("email")
+.notEmpty().withMessage("Please fill your email")
+.isEmail()
+.withMessage("Email is invalid”)
+
+
+
+
+#Sanitize Data before taking into Controller
+router.post(
+"/signup",
+[
+body("name")
+    .notEmpty()
+    .withMessage("Please fill your name!")
+    .isLength({ min: 2 })
+    .withMessage("Name is too short!")
+    .isLength({ max: 40 })
+    .withMessage("Name is too long!")
+    .trim(), //remove white space
+check("email")
+    .normalizeEmail() //trims+removes dot etc.
+    .notEmpty()
+    .withMessage("Please fill your email")
+    .isEmail()
+    .withMessage("Email is invalid"),    
+body("password", "Min 6 password required")
+    .not()
+    .isEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 6 }),
+body("confirmPassword")
+    .notEmpty()    
+    .withMessage("Please fill confirm password field")    
+    .custom((value, { req }) => {
+if (value !== req.body.password) {
+    wthrow new Error("Password doesn't Match, please try again");
+}
+return true;
+})
+],
+authController.postSignup
+);
+
+
+
+
+
+@HANDELLING ERRORS
+
+
+
+exports.postEditProductRoute = (req, res, next) => {
+. . . . . . . .
+Product.findOne({ _id: _id, userId: req.user._id })
+.then(product => {
+if(!product){
+    . . . . . . . . . . . . . . .
+})
+.catch(err => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error); //next(error will end up below special fn
+    });;
+};
+
+
+Above Error will end up here !
+Also if error is thrown in sync code it will end up here!
+//Special Function to Handle next(error)
+app.use((error, req, res, next)=> { //4 arguments is error Handeling Middleware by Express!
+console.log("In here", error);
+res.redirect("/500");
+});
+Express will find this middleware whenever next(error) is called
+
+Inside catch we shouldn’t throw rather next(error) must be used !
+
+
+
+
+
+
+
+HTTP Status Codes
+httpstatuses.com is an easy to reference database of HTTP Status Codes with their definitions and helpful code references all in one place. Visit an individual status code viahttpstatuses.com/code or browse the list below.
+@ Share on Twitter⊕ Add to Pinboard
+1×× Informational
+100 Continue
+101 Switching Protocols
+102 Processing
+2×× Success
+200 OK
+201 Created
+202 Accepted
+203 Non-authoritative Information
+204 No Content
+205 Reset Content
+206 Partial Content
+207 Multi-Status
+208 Already Reported
+226 IM Used
+3×× Redirection
+300 Multiple Choices
+301 Moved Permanently //REDIRECT
+302 Found
+303 See Other
+304 Not Modified
+305 Use Proxy
+307 Temporary Redirect
+308 Permanent Redirect
+4×× Client Error
+400 Bad Request
+401 Unauthorized
+402 Payment Required
+403 Forbidden
+404 Not Found
+405 Method Not Allowed
+406 Not Acceptable
+407 Proxy Authentication Required
+408 Request Timeout
+409 Conflict
+410 Gone
+411 Length Required
+412 Precondition Failed
+413 Payload Too Large
+414 Request-URI Too Long
+415 Unsupported Media Type
+416 Requested Range Not Satisfiable
+417 Expectation Failed
+418 I'm a teapot
+421 Misdirected Request
+422 Unprocessable Entity //CLIENT INPUT IS WRONG
+423 Locked
+424 Failed Dependency
+426 Upgrade Required
+428 Precondition Required
+429 Too Many Requests
+431 Request Header Fields Too Large
+444 Connection Closed Without Response
+451 Unavailable For Legal Reasons
+499 Client Closed Request
+5×× Server Error
+500 Internal Server Error
+501 Not Implemented
+502 Bad Gateway
+503 Service Unavailable
+504 Gateway Timeout
+505 HTTP Version Not Supported
+506 Variant Also Negotiates
+507 Insufficient Storage
+508 Loop Detected
+510 Not Extended
+511 Network Authentication Required
+599 Network Connect Timeout Error
+
+
+@Uploading and Dowloading File
+<form class="product-form" action=“…. . . ." method="POST" enctype="multipart/form-data”>
+By default encrypt is application/x-www-form-urlencoded
+#USING MULTAR
+const multer = require("multer");
+
+//single means only 1 file will come
+app.use(multer({dest:"images"}).single("image"));//image is the name of the file
+app.use(express.static(path.join(__dirname, "public")));
+
+Multer is used to parse the files sent to server.
+bodyParser can do it but doesn’t provide much functionality.
+single means 1 single file is there in form!
+
+
+
+
+
+#CONFIGURING MULTAR
+const fileStorage = multer.diskStorage({
+destination:(req, file, cb) => {
+cb(null, "images");
+},
+filename: (req,file,cb) => {
+null means no problem, false means problem !
+cb(null, new Date().toISOString() + '-' + file.originalname);
+//for unique filename date taken! Uuid can be done- better
+}
+})
+
+//bodyParser is also kept as multer can't parse application/www.encoded once!
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({storage: fileStorage}).single("image"));
+
+
+
+
+#Filtering File using Multar
+const fileFilter = (req, file, cb) => {
+if(
+file.mimeType === "image/png" ||
+file.mimeType === "image/jpg" ||
+file.mimeType ==="image/jpeg"){
+cb(null, true); //null means no error, true means store it
+}else{
+cb(null, false); //pass->false, it won’t be stored now! and req.file will b undefined
+}
+}
+
+app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single("image"));
+
+
+Showing progress bar when uploading image
+https://github.com/axios/axios/blob/master/examples/upload/index.html
+
+
+
+We don’t store image in db as it is too large! 
+It must be stored in server (File-System) and then just save the path!
+
+
+
+
+#Sending Pdf Files
+exports.getOrderInvoice = (req,res,next) => {
+const orderId = req.params.orderId;
+const fileName = 'invoice-' + orderId + '.pdf';
+const filePath = path.join("data", "invoice", fileName);
+const viewOnly = req.query.v;
+fs.readFile(filePath, (err, data) => {
+if (err) {
+console.log("Some Error Occured",err);
+req.flash("error", "Something went wrong while downloading Invoice!");
+res.redirect("/orders");
+} else {
+res.setHeader("Content-Type", "application/pdf");
+res.setHeader("Content-Disposition", `${viewOnly ? 'inline' : 'attachment'};filename="${fileName}`);
+//inline means - shown in browser, attachment - download
+res.send(data);
+}
+});
+}
+We can only check if Order ID corresponds to the user logged in 
+
+
+#PROBLEM WITH THIS APPROACH OF SENDING PDF
+For smaller files fs.readFile() is Ok.
+But in case file is large, is is not ok. WHY?
+readFile() reads complete file in the memory(RAM) and once it reads it will send it at once!!!!
+
+We should rather use createReadStream() for bigger files~~~
+const file = fs.createReadStream(filePath); //createReadStream -read data in chunks
+res.setHeader("Content-Type", "application/pdf");
+res.setHeader(
+"Content-Disposition",
+`${
+viewOnly ? "inline" : "attachment"
+};filename="${fileName}`
+);
+file.pipe(res); //send chunks to browser as you read !
+
+pipe will write it as it gets chunk! 
+It can only write to Writtable Stream!
+res is a writtable stream! !!!!!!!!!
+
+
+
+
+#TO CREATE PDF IN SERVER
+npm i pdfkit
+ const PDFDocument = require(“pdfkit”);
+res.setHeader("Content-Type", "application/pdf");
+res.setHeader(
+"Content-Disposition",
+`${viewOnly ? "inline" : "attachment"};filename="${fileName}`
+);
+const doc = new PDFDocument();//doc will become a node stream
+doc.pipe(fs.createWriteStream(filePath)); //write it on the path
+doc.pipe(res); //write and send to browser
+doc.text("Welcome to E-Planet");
+doc.end(); //end means to do writting stream
+
+
+
+#Delete File when not in use
+const fileDeleteHandler = (filePath) => {
+fs.unlink(filePath, (err)=> { //unlink is used to delete file
+if(err){
+throw new Error(err); //this will be caught by our 500 page error
+}
+})
+}
+
+
+
+
+@Pagination
+
+#Pagination in MongoDB
+
+const page = req.query.page;
+
+Product.find().skip((page-1)*limitProductsOnPage).limit(limitProductsOnPage)
+
+
+
+
+#Pagination in MYSQL
+
+1.SELECT * FROM tbl LIMIT 5,10;  # Retrieve rows 6-15
+2.SELECT column FROM table LIMIT 10 OFFSET 10;
+Offset 10 means skip 10!
+
+
+#Pagination Mongodb Demo
+res.render("shop/index.ejs", {
+. . . . . . . . . . .
+currentPage: page,
+
+previousPageExists: page > 1,
+nextPageExists: page !== Math.ceil(totRecords / limitProductsOnPage),
+nextPage: page + 1,
+previousPage: page - 1,
+lastPage: Math.ceil(totRecords / limitProductsOnPage),
+});
+
+@VIEW (1st and last always shown - next/prev always shown)
+<section class="pagination">
+<%if(currentPage!==1){%>
+<a href="?page=1">1</a>. keep it ?page=1 so that it gets appended to current route
+<%}%>
+<%if(previousPageExists && previousPage!==1){%>
+<a href="?page=<%=previousPage%>"><%=previousPage%></a> PREVIOUS PAGE
+<%}%>
+<a href="/products?page=<%=currentPage%>" class="active"><%=currentPage%></a> Current Page
+<%if(nextPageExists && nextPage!=lastPage){%>
+<a href="?page=<%=nextPage%>"><%=nextPage%></a>. NEXT PAGE
+<%}%>
+<%if(currentPage !=lastPage){%>
+<a href="?page=<%=lastPage%>"><%=lastPage%></a>. LAST PAGE
+<%}%>
+</section>
+
+
+
+@Async Request
+To Manipulate DOM use Javascript and send async request by using
+1.onclick()
+2.fetch()
+3.component.parentNode.removeChild(component_name)
+
+
+
+@Payments using stripe
+
+
+Payment process is hard, so all company outsource it 
+STRIPE IS A GREAT third party tool to do it!
+
+Secret key - stripe
+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
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
